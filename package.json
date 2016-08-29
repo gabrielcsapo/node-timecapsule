@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/gabrielcsapo/node-timecapsule/issues"
   },
-  "homepage": "https://github.com/gabrielcsapo/node-timecapsule#readme"
+  "homepage": "https://github.com/gabrielcsapo/node-timecapsule#readme",
+  "dependencies": {
+    "node-horseman": "^3.1.1"
+  }
 }
