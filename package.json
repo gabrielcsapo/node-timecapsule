@@ -1,0 +1,19 @@
+{
+  "name": "node-timecapsule",
+  "version": "0.0.0",
+  "description": "save all of your precious internetz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielcsapo/node-timecapsule.git"
+  },
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabrielcsapo/node-timecapsule/issues"
+  },
+  "homepage": "https://github.com/gabrielcsapo/node-timecapsule#readme"
+}
