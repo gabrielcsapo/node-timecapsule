@@ -7,9 +7,13 @@ module.exports = {
      * @property uri - url of a website
      */
     capsulate: function capsulate(uri) {
-        util.scrapeUrls(uri, function(value, error) {
-            console.log(value);
+        util.scrapeUrls(uri, function(urls, error) {
+            console.log(urls);
             console.log(error);
+            util.save(urls, function(results, error) {
+                console.log(results);
+                console.log(error);
+            });
         });
     }
 }

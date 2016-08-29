@@ -1,8 +1,27 @@
 var url = require('url');
+var scraper = require('website-scraper');
 var Horseman = require('node-horseman');
 var horseman = new Horseman();
 
 module.exports = {
+    save: function(urls, callback) {
+        var options = {
+            urls: urls,
+            prettifyUrls: true,
+            directory: './capsules',
+            recursive: true,
+            maxDepth: 10,
+            request: {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0'
+                }
+            }
+        };
+
+        scraper.scrape(options, function(error, result) {
+            callback(result, error);
+        });
+    },
     /**
      * finds all a tags on page to scrape
      * @function scrapeUrls
@@ -27,7 +46,7 @@ module.exports = {
                 }).map(function(u) {
                     // if the urls do not have a hostname
                     // append the url because they are relative
-                    if(url.parse(u).path && !url.parse(u).hostname) {
+                    if (url.parse(u).path && !url.parse(u).hostname) {
                         return uri + u;
                     } else {
                         return u;
@@ -35,9 +54,9 @@ module.exports = {
                 });
                 callback(value, null);
             })
+            .catch(function(e) {
+                callback(null, e);
+            })
             .close()
-            .catch(function(e){
-              callback(null, e);
-            });
     }
 }
