@@ -8,11 +8,11 @@
 
 > save all of your precious internetz
 
-# installation
+# Installation
 
-```npm install node-timecapsule```
+`npm install node-timecapsule`
 
-# usage
+# Usage
 
 ```
 var timecapsule = require('node-timecapsule');
