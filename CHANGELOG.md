@@ -8,4 +8,5 @@
 - place capsules in the correct directory (timestamp them?)
 - be able to view saved capsules?
     - might just be a page that can search all of the saved files?
-- write tests 
+- write tests
+- might be interesting instead of saving all of the html to just over an option to take a screenshot of all the pages?
