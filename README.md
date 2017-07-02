@@ -14,14 +14,23 @@
 
 # Usage
 
+> programmatic
+
 ```
-var timecapsule = require('node-timecapsule');
+const Timecapsule = require('node-timecapsule');
+const timecapsule = new Timecapsule(); // you can pass a directory to the constructor if you want to specific a different directory then the default, `capsules`.
 
-timecapsule.capsulate('http://www.bestbuy.com');
+timecapsule.save('http://www.bestbuy.com');
 ```
 
-# What is the use?
+> shell
 
-> Gabe you are kind of a terrible person for stealing websites right?
+```
+$ timecapsule save http://www.bestbuy.com
+```
 
-> ---- Okay, I know what you are saying, this is kind of shady and unethical right? Well most websites don't expose an API, they hoard that data to create their own intranets. Why is it so difficult to search for products across websites? Because their is no central data aggregator other then sites like google, bing, duck-duck-go and other search crawlers. In the name of internet freedom, let the people have their internetz!
+# Screenshots
+
+![main](./screenshots/main.png)
+
+![backup](./screenshots/backup.png)

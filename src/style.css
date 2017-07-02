@@ -1,0 +1,14 @@
+html {
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+html, body, div#root {
+    height: 100%;
+    width: 100%;
+}
