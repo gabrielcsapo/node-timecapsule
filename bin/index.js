@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const ora = require('ora');
+
 const Timecapsule = require('../index');
 const timecapsule = new Timecapsule();
 
@@ -16,15 +18,21 @@ program
 program
   .command('save <url>')
   .action((url) => {
-    timecapsule.save(url, (err, result) => {
-        console.log(err, result);
+    const spinner = ora(`Saving ${url}`).start();
+
+    timecapsule.save(url, (error) => {
+        spinner.succeed(`Saved ${url}`)
     });
   })
 
 program
   .command('get <url>')
   .action((url) => {
-    console.log(JSON.stringify(timecapsule.get(url), null, 4))
+    const spinner = ora(`get ${url}`).start();
+
+    timecapsule.get(url, {}, (error, result) => {
+        spinner.succeed(JSON.stringify(result, null, 4))
+    });
   });
 
 program.parse(process.argv);

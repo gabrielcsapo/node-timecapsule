@@ -1,6 +1,5 @@
 const scrape = require('website-scraper');
 const moment = require('moment');
-const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -17,6 +16,8 @@ class Timecapsule {
      * @property url - url of a website
      */
      save(url, callback) {
+		 const self = this;
+         console.log(url);
          url = normalizeUrl(url);
 
          const hashUrl = url.indexOf('://') > -1 ? url.substring(url.indexOf('://') + 3, url.length) : url;
@@ -26,6 +27,9 @@ class Timecapsule {
          const options = {
              urls: [url],
              prettifyUrls: true,
+			 recursive: true,
+             maxRecursiveDepth: 2,
+             maxDepth: 2,
              directory: `${this.directory}/${hash}/${date}`,
              request: {
                  headers: {
@@ -42,7 +46,7 @@ class Timecapsule {
                  callback ? callback(err, null) : console.error(err);
              });
      }
-     get(url, options) {
+     get(url, options, callback) {
          url = normalizeUrl(url);
 
          const web = options && options.web;
@@ -52,38 +56,28 @@ class Timecapsule {
          const hashUrl = url.indexOf('://') > -1 ? url.substring(url.indexOf('://') + 3, url.length) : url;
          const hash = new Buffer(hashUrl).toString('base64')
 
-         try {
-             const stats = fs.statSync(path.resolve(this.directory, hash));
-         } catch(ex) {
-             return {
-                 hash,
-                 dates: []
-             };
-         }
-         const dates = fs.readdirSync(path.resolve(this.directory, hash)).filter((a) => moment(a, 'Y-M-D-h:mm:ss:a')._isValid).sort((a, b) => new Date(b) - new Date(a));
-         var ret = {};
+         fs.readdir(path.resolve(this.directory, hash), (error, dates) => {
+             if(error) return callback(error);
 
-         if(web) {
-             ret = {
-                 url,
-                 hash,
-                 recent: `${host}/v/${hash}/${dates[0]}/index.html`,
-                 dates // moment(d, 'Y-M-D-h:mm:ss:a') to be able to parse the date into a valid date
-             };
-         } else {
-            ret = {
-                url,
-                hash,
-                directory: path.resolve(this.directory, hash),
-                recent: path.resolve(this.directory, hash, dates[0], 'index.html'),
-                dates
-            };
-         }
+             dates = dates.filter((a) => moment(a, 'Y-M-D-h:mm:ss:a')._isValid).sort((a, b) => new Date(b) - new Date(a));
 
-         return ret;
-     }
-     getAll(options) {
-         return fs.readdirSync(path.resolve(this.directory)).map((b) => this.get(new Buffer(b, 'base64').toString('utf8'), options));
+             if(web) {
+                 return callback(null, {
+                     url,
+                     hash,
+                     recent: `${host}/v/${hash}/${dates[0]}/index.html`,
+                     dates // moment(d, 'Y-M-D-h:mm:ss:a') to be able to parse the date into a valid date
+                 })
+             } else {
+                 return callback(null, {
+                     url,
+                     hash,
+                     directory: path.resolve(this.directory, hash),
+                     recent: path.resolve(this.directory, hash, dates[0], 'index.html'),
+                     dates
+                 });
+             }
+         });
      }
      serve(port, callback) {
          const app = express();

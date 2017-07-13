@@ -7,7 +7,7 @@ class Layout extends React.Component {
 
     return (
       <div style={{ height: '100%', width: '100%' }}>
-        <div className="navbar">
+        <div className="navbar navbar-center">
           <div className="container">
             <div className="navbar-title">
               <a className="text-black" href="/">
