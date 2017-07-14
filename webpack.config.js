@@ -40,7 +40,7 @@ if (process.env.NODE_ENV == 'production') {
                 'NODE_ENV': JSON.stringify('production')
             }
         }),
-        new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(en)$/),
+        new webpack.ContextReplacementPlugin(/moment[\\]locale$/, /^\.\/(en)$/),
         new webpack.optimize.UglifyJsPlugin({
             comments: false,
             compress: {

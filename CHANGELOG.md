@@ -1,3 +1,8 @@
+# 0.2.0
+
+- save, get and getAll all require a callback.
+- UI has been further simplified
+
 # 0.1.0
 
 - changes the modules interface and adds front-end component.

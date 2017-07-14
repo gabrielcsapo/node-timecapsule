@@ -1,4 +1,4 @@
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
 import React from 'react';
 
@@ -6,9 +6,9 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            results: [],
+            result: [],
             loading: false
-        }
+        };
     }
     componentWillMount() {
         this.setState({
@@ -16,48 +16,58 @@ class Main extends React.Component {
         });
 
         fetch(`/api/a`)
-        .then((response) => {
-            return response.json()
-        }).then((json) => {
-            console.log(json);
-            this.setState({
-                results: json,
-                loading: false
+            .then((response) => {
+                return response.json();
+            })
+            .then((json) => {
+                const { result } = json;
+                this.setState({
+                    result,
+                    loading: false
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    loading: false
+                });
             });
-        })
     }
     render () {
-        const { loading, results } = this.state;
+        const { loading, result } = this.state;
 
         return (
-            <div className="text-center" style={{width:"100%",position: "absolute",top: "50%",transform: "translateY(-50%)"}}>
-                <h3 className="text-black">🌤</h3>
+            <div className="text-center" style={{ width:"50%", position: "absolute", top: "50%", transform: "translateY(-50%)", right: '25%'}}>
                 { loading ?
-                    <div className="panel panel-default" style={{ width: '100%', height: '200px' }}>
-                        <div className="spinner-wrapper">
-                            <div className="spinner spinner-primary"></div>
-                        </div>
-                    </div>
+                    <ul className="list" style={{ padding: '20px' }}>
+                        <li className="list-item">
+                            <div className="spinner-wrapper">
+                                <div className="spinner spinner-primary"></div>
+                            </div>
+                        </li>
+                    </ul>
                 :
                     <div>
-                        { results.length > 0 ?
-                            <div style={{ width: "50%", margin: "0 auto" }}>
-                                <ul className="list" style={{ padding: '20px' }}>
-                                    { results.map((result, i) => {
-                                        return (
-                                            <li className="list-item" key={ i }>
-                                                <a href={ `${result.recent}` } target="_blank">
-                                                    { result.url } - { result.dates.length } <small> { result.dates.length == 1 ? 'backup' : 'backups' }</small>
-                                                </a>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
+                        { result.length > 0 ?
+                            <ul className="list" style={{ padding: '20px' }}>
+                                { result.map((result, i) => {
+                                    return (
+                                        <li className="list-item" key={ i }>
+                                            <a href={ `/backup/?searchTerm=${result.url}` } target="_blank">
+                                                { result.url } - { result.dates.length } <small> { result.dates.length == 1 ? 'backup' : 'backups' }</small>
+                                            </a>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
                         :
-                            <div className="panel panel-default" style={{ width: '100%', height: '200px', lineHeight: '200px', textAlign: 'center' }}>
-                                no results found 🙈
-                            </div>
+                            <ul className="list" style={{ padding: '20px' }}>
+                                <li className="list-item">
+                                    no results found 🙈
+                                </li>
+                                <li className="list-item">
+                                    <a href="/backup"> Back Something Up! </a>
+                                </li>
+                            </ul>
                         }
                     </div>
                 }

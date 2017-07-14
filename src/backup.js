@@ -1,4 +1,4 @@
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
 import React from 'react';
 import Moment from 'moment';
@@ -24,17 +24,21 @@ class Search extends React.Component {
       });
 
       fetch(`/api/i/${url}`)
-      .then((response) => {
-          return response.json()
-      }).then((json) => {
-          this.setState({
-              result: json,
-              searchTerm: url,
-              request: 'done'
+          .then((response) => {
+              return response.json();
+          })
+          .then((json) => {
+              const { result } = json;
+
+              this.setState({
+                  result,
+                  searchTerm: url,
+                  request: 'done'
+              });
+          })
+          .catch(function(ex) {
+              console.log('parsing failed', ex); // eslint-disable-line
           });
-      }).catch(function(ex) {
-          console.log('parsing failed', ex)
-      })
   }
   search(e) {
       const searchTerm = e.target.value;
@@ -42,7 +46,7 @@ class Search extends React.Component {
       if(e.keyCode == 13) {
         this.get(searchTerm);
         if (history.pushState) {
-            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?searchTerm=' + searchTerm;;
+            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?searchTerm=' + searchTerm;
             window.history.pushState({path:newurl},'',newurl);
         }
       }
@@ -54,7 +58,7 @@ class Search extends React.Component {
       });
       fetch(`/api/b/${searchTerm}`)
           .then((response) => {
-              return response.json()
+              return response.json();
           })
           .then((json) => {
               if(json.error) {
@@ -68,59 +72,67 @@ class Search extends React.Component {
                   this.get(searchTerm);
               }
           }).catch(function(ex) {
-              console.log('parsing failed', ex)
-          })
+              console.log('parsing failed', ex); // eslint-disable-line
+          });
   }
   render() {
     const { result, searchTerm, request } = this.state;
-    const buttonValue = request === 'loading' ? (<div className="spinner spinner-primary"></div>) : request == 'error' ? 'something went wrong :( ' : <span> Backup </span>;
+    let buttonValue = <button></button>;
+
+    if(request == 'loading' && searchTerm) {
+        buttonValue = <button style={{ margin: 0, height: "39px", padding: ".375rem 1% .375rem 1%" }} className="btn btn-block"><div className="spinner spinner-primary"></div></button>;
+    } else if(request == 'done' && searchTerm) {
+        buttonValue = <button style={{ margin: "0 5px", height: "39px", padding: ".375rem 1% .375rem 1%" }} onClick={this.save.bind(this)} className="btn btn-block"> Backup </button>;
+    } else {
+        buttonValue = <button style={{ margin: 0, height: "39px", padding: ".375rem 1% .375rem 1%" }} onClick={this.search.bind(this)} className="btn btn-block"> Search </button>;
+    }
 
     return (
-        <div style={{ width:"100%" }}>
+        <div style={{ width:"50%", margin: "0 auto" }}>
             <div style={{ padding: '20px', margin: '0 auto', width: '80%' }}>
-                <input onKeyDown={this.search.bind(this)} onKeyUp={this.search.bind(this)} type="text" placeholder={ searchTerm || "Enter the url you want view" } />
-                <div style={{ padding: '20px' }}>
-                { request === 'loading' ?
-                    <div className="panel panel-default" style={{ width: '100%', height: '200px' }}>
-                        <div className="spinner-wrapper">
-                            <div className="spinner spinner-primary"></div>
-                        </div>
+                <div className="grid">
+                    <div className="col-10-12">
+                        <input style={{ height: "25px" }} onKeyDown={this.search.bind(this)} onKeyUp={this.search.bind(this)} type="text" placeholder={ searchTerm || "Enter the url you want view" }/>
                     </div>
-                :
-                    <div>
-                        <div className="text-center">
-                            <b>{ searchTerm }</b>
-                        </div>
+                    <div className="col-2-12">
+                        { buttonValue }
+                    </div>
+                </div>
+                <br/>
+                <div className="grid">
+                    <div className="col-12-12">
+                        { request === 'loading' ?
+                            <ul className="list">
+                                <div className="spinner-wrapper">
+                                    <div className="spinner spinner-primary"></div>
+                                </div>
+                            </ul>
+                        :
                         <div>
-                            <small> Options </small>
-                            <br/>
-                            <button onClick={this.save.bind(this)} className="btn"> { buttonValue } </button>
-                        </div>
-                        <div>
-                            <small> Results </small>
-                            <br/>
                             { Object.keys(result).length > 0 ?
-                                <div>
-                                    <ul className="list" style={{ padding: '20px' }}>
-                                        { result.dates.map((date, i) => {
-                                            return (
-                                                <li className="list-item" key={ i }>
-                                                    <a href={ `/v/${result.hash}/${date}/index.html` } target="_blank">
-                                                        { Moment(date, 'Y-M-D-h:mm:ss:a').format() } ({ Moment(date, 'Y-M-D-h:mm:ss:a').fromNow() })
-                                                    </a>
-                                                </li>
-                                            )
-                                        })}
-                                    </ul>
-                                </div>
+                            <div>
+                                <ul className="list">
+                                    { result.dates.map((date, i) => { return (
+                                    <li className="list-item" key={ i }>
+                                        <a href={ `/v/${result.hash}/${date}/index.html` } target="_blank">
+                                            { Moment(date, 'Y-M-D-h:mm:ss:a').format() } ({ Moment(date, 'Y-M-D-h:mm:ss:a').fromNow() })
+                                        </a>
+                                    </li>
+                                    ); })}
+                                </ul>
+                            </div>
                             :
-                                <div className="panel panel-default" style={{ width: '100%', height: '200px', lineHeight: '200px', textAlign: 'center' }}>
-                                    no results found 🙈
-                                </div>
+                            <div>
+                                <ul className="list">
+                                    <li className="list-item text-center">
+                                        no results found 🙈
+                                    </li>
+                                </ul>
+                            </div>
                             }
                         </div>
+                        }
                     </div>
-                }
                 </div>
             </div>
         </div>
