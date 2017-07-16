@@ -1,5 +1,7 @@
 # node-timecapsule
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/gabrielcsapo/node-timecapsule.svg)](https://greenkeeper.io/)
+
 [![Npm Version](https://img.shields.io/npm/v/node-timecapsule.svg)](https://www.npmjs.com/package/node-timecapsule)
 [![Dependency Status](https://david-dm.org/gabrielcsapo/node-timecapsule.svg)](https://david-dm.org/gabrielcsapo/node-timecapsule)
 [![devDependency Status](https://david-dm.org/gabrielcsapo/node-timecapsule/dev-status.svg)](https://david-dm.org/gabrielcsapo/node-timecapsule#info=devDependencies)
