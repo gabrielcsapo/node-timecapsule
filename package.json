@@ -1,7 +1,7 @@
 {
   "name": "node-timecapsule",
   "version": "0.2.0",
-  "description": "saving the internet for future generations",
+  "description": "⏳ saving the internet for future generations",
   "main": "index.js",
   "repository": {
     "type": "git",
